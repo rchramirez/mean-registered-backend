@@ -7,6 +7,8 @@ exports.createEnrolled = async (req, res) => {
 
         enrolled = new Enrolled(req.body);
 
+        enrolled.age = _calculateAge(req.body.birthDate);
+
         await enrolled.save();
         res.send(enrolled);
         
@@ -28,7 +30,7 @@ exports.getEnrolleds = async (req, res) => {
 
 exports.updateEnrolled = async (req, res) => {
     try {
-        const { name, lastName, birthDate, cellphone, cellule, annex, guest } = req.body;
+        const { name, lastName, birthDate, cellphone, cellule, annex, guest, busNumber } = req.body;
         let enrolled = await Enrolled.findById(req.params.id);
 
         if(!enrolled) {
@@ -42,6 +44,9 @@ exports.updateEnrolled = async (req, res) => {
         enrolled.cellule = cellule;
         enrolled.annex = annex;
         enrolled.guest = guest;
+        enrolled.busNumber = busNumber;
+
+        enrolled.age = _calculateAge(birthDate);
 
         enrolled = await Enrolled.findOneAndUpdate({ _id: req.params.id }, enrolled, { new: true });
         res.json(enrolled);
@@ -83,4 +88,9 @@ exports.deleteEnrolled = async (req, res) => {
         console.log(error);
         res.status(500).send('There was a mistake');
     }
+}
+
+function _calculateAge(birthDate) {
+    const dateParts = birthDate.split("-");
+    return Math.floor((new Date() - new Date(Date.UTC(dateParts[2], dateParts[1]-1, dateParts[0])).getTime()) / 3.15576e+10);
 }

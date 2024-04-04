@@ -14,6 +14,10 @@ const EnrolledSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    age: {
+        type: Number,
+        required: false
+    },
     cellphone: {
         type: Number,
         required: true
@@ -28,7 +32,11 @@ const EnrolledSchema = mongoose.Schema({
     },
     guest: {
         type: String,
-        required: true
+        required: false
+    },
+    busNumber: {
+        type: Number,
+        required: false
     },
     fechaCreacion: {
         type: Date,
